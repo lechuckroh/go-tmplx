@@ -15,6 +15,7 @@ tmplx <input_template> <output_file> [options]
 
 ### 옵션
 - `-e, --env`: 환경 변수 파일 (.env) 경로
+- `-p, --env-prefix`: 환경 변수 접두사 (예: APP_, DB_)
 - `--version`: 버전 정보 출력
 - `--help`: 도움말 출력
 
@@ -60,7 +61,38 @@ export DEBUG=false
 tmplx config.tmpl config.yaml
 ```
 
-### 3. 복잡한 템플릿 예제
+### 3. 환경 변수 접두사 사용
+
+환경 변수에 접두사를 사용하여 네임스페이스를 분리할 수 있습니다.
+
+**환경 변수 파일 (.env):**
+```env
+APP_HOST=localhost
+APP_PORT=8080
+APP_DEBUG=true
+DB_HOST=database
+DB_PORT=5432
+DB_NAME=myapp
+```
+
+**실행:**
+```bash
+# APP_ 접두사만 사용
+tmplx config.tmpl config.yaml -e .env -p APP_
+
+# DB_ 접두사만 사용
+tmplx db-config.tmpl db-config.yaml -e .env -p DB_
+```
+
+**템플릿에서는 접두사 없이 사용:**
+```go
+server:
+  host: {{.HOST}}  # APP_HOST 값
+  port: {{.PORT}}  # APP_PORT 값
+  debug: {{.DEBUG}}  # APP_DEBUG 값
+```
+
+### 4. 복잡한 템플릿 예제
 
 **템플릿 파일 (docker-compose.tmpl):**
 ```yaml
@@ -111,7 +143,7 @@ DB_DATA=./postgres-data
 tmplx docker-compose.tmpl docker-compose.yml -e .env
 ```
 
-### 4. 조건문과 반복문 사용
+### 5. 조건문과 반복문 사용
 
 **템플릿 파일 (nginx.tmpl):**
 ```nginx
@@ -191,17 +223,28 @@ go-tmplx는 Go의 `text/template` 패키지를 사용합니다.
 3. 시스템 환경 변수
 
 ### 네이밍 규칙
-- 환경 변수는 `GW_` 접두사를 사용합니다
+- 환경 변수는 접두사를 사용할 수 있습니다 (예: `APP_`, `DB_`, `GW_`)
+- `--env-prefix` 옵션으로 특정 접두사만 필터링할 수 있습니다
 - 템플릿에서는 접두사 없이 사용합니다
 
 예시:
 ```env
-GW_HOST=localhost  # 환경 변수
+APP_HOST=localhost  # 환경 변수
+DB_HOST=database    # 다른 접두사
 ```
 
 템플릿에서:
 ```go
-{{.HOST}}  # localhost로 출력
+{{.HOST}}  # 접두사에 따라 다른 값 출력
+```
+
+**접두사 필터링:**
+```bash
+# APP_ 접두사만 사용
+tmplx config.tmpl config.yaml -e .env -p APP_
+
+# DB_ 접두사만 사용  
+tmplx db-config.tmpl db-config.yaml -e .env -p DB_
 ```
 
 ## Best Practices
@@ -235,7 +278,8 @@ tmplx --dry-run config.tmpl
 ### 환경 변수 문제
 ```bash
 # 환경 변수 확인
-env | grep GW_
+env | grep APP_  # 특정 접두사 확인
+env | grep DB_   # 다른 접두사 확인
 ```
 
 ### 권한 문제

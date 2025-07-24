@@ -48,6 +48,9 @@ Docker를 사용하여 실행할 수 있습니다.
 # 최신 버전 실행
 docker run --rm -v $(pwd):/work ghcr.io/lechuckroh/go-tmplx:latest input.tmpl output.txt
 
+# 환경 변수 파일과 접두사 사용
+docker run --rm -v $(pwd):/work ghcr.io/lechuckroh/go-tmplx:latest input.tmpl output.txt -e .env -p APP_
+
 # 특정 버전 실행
 docker run --rm -v $(pwd):/work ghcr.io/lechuckroh/go-tmplx:v1.0.0 input.tmpl output.txt
 ```

@@ -50,6 +50,11 @@ DEBUG=true
 tmplx config.tmpl config.yaml -e .env
 ```
 
+**환경 변수 접두사 사용:**
+```bash
+tmplx config.tmpl config.yaml -e .env -p APP_
+```
+
 **결과:**
 ```yaml
 server:

@@ -46,6 +46,7 @@ task build
 ### 로컬 실행
 ```bash
 task run -- input.tmpl output.txt
+task run -- input.tmpl output.txt -e .env -p APP_
 ```
 
 ## GoReleaser 사용

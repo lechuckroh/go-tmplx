@@ -7,14 +7,11 @@ import (
 	"github.com/lechuckroh/go-tmplx/internal/app/tmplx"
 )
 
-const (
-	EnvPrefix = "GW_"
-)
-
 type args struct {
-	Input   string `arg:"positional,required" help:"Input template file path"`
-	Output  string `arg:"positional,required" help:"Output file path"`
-	EnvFile string `arg:"env:ENV_FILE,-e,--env" help:".env file to load"`
+	Input     string `arg:"positional,required" help:"Input template file path"`
+	Output    string `arg:"positional,required" help:"Output file path"`
+	EnvFile   string `arg:"env:ENV_FILE,-e,--env" help:".env file to load"`
+	EnvPrefix string `arg:"-p,--env-prefix" help:"Environment variable prefix"`
 }
 
 var version = "(devel)"
@@ -28,7 +25,7 @@ func main() {
 	arg.MustParse(&args)
 
 	// Load environment variables
-	envMap := tmplx.LoadEnv(args.EnvFile, EnvPrefix)
+	envMap := tmplx.LoadEnv(args.EnvFile, args.EnvPrefix)
 	for key, value := range envMap {
 		log.Printf("%s=%s", key, value)
 	}
