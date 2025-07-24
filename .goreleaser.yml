@@ -56,18 +56,18 @@ changelog:
       - Merge pull request
       - Merge branch
 
-brews:
-  - name: tmplx
-    description: "Template processor with environment variable support"
-    repository:
-      name: lechuckroh/homebrew-tap
-      branch: main
-    commit_author:
-      name: lechuckroh
-      email: lechuckroh@gmail.com
-    homepage: "https://github.com/lechuckroh/go-tmplx"
-    test: |
-      system "#{bin}/tmplx", "--version"
+# brews:
+#   - name: tmplx
+#     description: "Template processor with environment variable support"
+#     repository:
+#       name: lechuckroh/homebrew-tap
+#       branch: main
+#     commit_author:
+#       name: lechuckroh
+#       email: lechuckroh@gmail.com
+#     homepage: "https://github.com/lechuckroh/go-tmplx"
+#     test: |
+#       system "#{bin}/tmplx", "--version"
 
 # dockers:
 #   - image_templates:
