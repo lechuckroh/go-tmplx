@@ -1,0 +1,37 @@
+version: '3'
+
+vars:
+  DIST_DIR: ./dist
+
+tasks:
+  default:
+    cmds:
+      - task --list-all
+
+  format:
+    desc: "format source code"
+    cmds:
+      - gofumpt -l -w cmd/
+
+  install:
+    desc: "install dependencies"
+    cmds:
+      - go get ./...
+      - go mod vendor
+
+  update-all:
+    desc: "update all dependencies to latest version"
+    cmds:
+      - go get -u ./...
+
+  run-tmplx:
+    desc: "run tmplx"
+    aliases: [run]
+    cmds:
+      - go run cmd/tmplx/*.go {{.CLI_ARGS}}
+
+  build-tmplx:
+    desc: "build tmplx"
+    aliases: [build]
+    cmds:
+      - go build -ldflags="-s -w" -o {{ .DIST_DIR }}/tmplx cmd/tmplx/*.go
