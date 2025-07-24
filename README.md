@@ -15,18 +15,9 @@
 
 ### 설치
 
-**Homebrew (macOS/Linux):**
-```bash
-brew install lechuckroh/tap/tmplx
-```
-
 **수동 설치:**
 [릴리즈 페이지](https://github.com/lechuckroh/go-tmplx/releases)에서 운영체제에 맞는 바이너리를 다운로드하세요.
 
-**Docker:**
-```bash
-docker pull ghcr.io/lechuckroh/go-tmplx:latest
-```
 
 ### 기본 사용법
 
