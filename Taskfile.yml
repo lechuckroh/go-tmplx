@@ -35,3 +35,55 @@ tasks:
     aliases: [build]
     cmds:
       - go build -ldflags="-s -w" -o {{ .DIST_DIR }}/tmplx cmd/tmplx/*.go
+
+  test:
+    desc: "run tests"
+    cmds:
+      - go test ./...
+
+  #---------------------------------------------------------------------------
+  # go-releaser
+  #---------------------------------------------------------------------------
+
+  install-goreleaser:
+    desc: "install go-releaser locally"
+    cmds:
+      - go install github.com/goreleaser/goreleaser@latest
+
+  goreleaser-check:
+    desc: "check go-releaser configuration"
+    cmds:
+      - goreleaser check
+
+  goreleaser-snapshot:
+    desc: "create a snapshot release for testing"
+    env:
+      GITHUB_REPOSITORY: lechuckroh/go-tmplx
+    cmds:
+      - goreleaser release --snapshot --clean --skip=publish,docker
+
+  goreleaser-release:
+    desc: "create a full release (requires git tag)"
+    env:
+      GITHUB_REPOSITORY: lechuckroh/go-tmplx
+    cmds:
+      - goreleaser release --clean
+
+  goreleaser-build-local:
+    desc: "build for current platform only"
+    cmds:
+      - goreleaser build --single-target --clean
+
+  goreleaser-snapshot-minimal:
+    desc: "create minimal snapshot (binaries only)"
+    env:
+      GITHUB_REPOSITORY: lechuckroh/go-tmplx
+    cmds:
+      - goreleaser release --snapshot --clean --skip=publish,docker,validate,announce,sign,sbom
+
+  clean:
+    desc: "clean build artifacts"
+    cmds:
+      - rm -rf dist/
+      - rm -rf bin/
+

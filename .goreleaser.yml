@@ -1,0 +1,103 @@
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    ignore:
+      - goos: windows
+        goarch: arm64
+    binary: tmplx
+    main: ./cmd/tmplx
+    ldflags:
+      - -s -w
+      - -X main.version={{.Version}}
+    hooks:
+      post:
+        - cmd: echo "Build completed for {{.Os}}/{{.Arch}}"
+
+archives:
+  - format: tar.gz
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - README.md
+      - LICENSE
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^ci:'
+      - Merge pull request
+      - Merge branch
+
+brews:
+  - name: tmplx
+    description: "Template processor with environment variable support"
+    repository:
+      name: lechuckroh/homebrew-tap
+      branch: main
+    commit_author:
+      name: lechuckroh
+      email: lechuckroh@gmail.com
+    homepage: "https://github.com/lechuckroh/go-tmplx"
+    test: |
+      system "#{bin}/tmplx", "--version"
+
+dockers:
+  - image_templates:
+      - "ghcr.io/{{ .Env.GITHUB_REPOSITORY }}:{{ .Version }}"
+      - "ghcr.io/{{ .Env.GITHUB_REPOSITORY }}:latest"
+    dockerfile: Dockerfile
+    use: buildx
+    build_flag_templates:
+      - "--platform=linux/amd64"
+      - "--platform=linux/arm64"
+    extra_files:
+      - README.md
+      - LICENSE
+
+release:
+  draft: false
+  prerelease: false
+  name_template: '{{ .ProjectName }} {{ .Version }}'
+  footer: |
+    ## Installation
+
+    ### Using Homebrew
+    ```bash
+    brew install lechuckroh/tap/tmplx
+    ```
+
+    ### Manual Installation
+    Download the appropriate binary for your platform from the assets above.
+
+    ### Docker
+    ```bash
+    docker pull ghcr.io/lechuckroh/go-tmplx:latest
+    ``` 
