@@ -69,16 +69,16 @@ brews:
     test: |
       system "#{bin}/tmplx", "--version"
 
-dockers:
-  - image_templates:
-      - "ghcr.io/{{ .Env.GITHUB_REPOSITORY }}:{{ .Version }}"
-      - "ghcr.io/{{ .Env.GITHUB_REPOSITORY }}:latest"
-    dockerfile: Dockerfile
-    build_flag_templates:
-      - "--platform=linux/amd64"
-    extra_files:
-      - README.md
-      - LICENSE
+# dockers:
+#   - image_templates:
+#       - "ghcr.io/{{ .Env.GITHUB_REPOSITORY }}:{{ .Version }}"
+#       - "ghcr.io/{{ .Env.GITHUB_REPOSITORY }}:latest"
+#     dockerfile: Dockerfile
+#     build_flag_templates:
+#       - "--platform=linux/amd64"
+#     extra_files:
+#       - README.md
+#       - LICENSE
 
 release:
   draft: false
